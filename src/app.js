@@ -1,0 +1,78 @@
+import React, { useEffect, useState, useRef } from "react"
+import useMidi from "react-midi-hook"
+
+const frenchNotes = {
+	A: "la",
+	B: "si",
+	C: "do",
+	D: "ré",
+	E: "mi",
+	F: "fa",
+	G: "sol",
+}
+
+export default () => {
+	const { pressedKeys, event } = useMidi()
+	const [keysPressed, setKeypressed] = useState([])
+
+	useEffect(() => {
+		if (Array.isArray(pressedKeys) && pressedKeys.length)
+			setKeypressed([pressedKeys[0], ...keysPressed])
+	}, [pressedKeys])
+
+	const toFR = letter => frenchNotes[letter.replace(/#$/, "")]
+
+	const Event = ({ keyPressed, event }) => {
+		if (!keyPressed) return null
+
+		const fr = toFR(keyPressed.letter)
+
+		return (
+			<>
+				<ul>
+					<li>
+						<b>Value</b>: {keyPressed.position}
+					</li>
+					<li>
+						<b>Note</b>: {keyPressed.letter} {fr && <>({fr.toUpperCase()})</>}
+					</li>
+					<li>
+						<b>Octave</b>: {keyPressed.octave}
+					</li>
+					<li>
+						<b>Velocity</b>: {keyPressed.velocity} (
+						{parseFloat((keyPressed.velocity / 127) * 100).toFixed(0)}%)
+					</li>
+				</ul>
+				<hr />
+				<p>Last event: {event.type}</p>
+			</>
+		)
+	}
+
+	const Log = () => {
+		if (!keysPressed || !Array.isArray(keysPressed) || keysPressed.length <= 1)
+			return null
+
+		return (
+			<>
+				<h3>Previously played:</h3>
+				<pre style={{ maxHeight: 250, overflowY: "scroll", overflowX: "none" }}>
+					{keysPressed
+						.slice(1)
+						.map(k => `${k.position} (${k.letter} - ${toFR(k.letter)})`)
+						.join("\n")}
+				</pre>
+			</>
+		)
+	}
+
+	return (
+		<div>
+			<h1 style={{ marginBottom: 0 }}>MIDI</h1>
+			<h3 style={{ margin: 0 }}>Plug a MIDI keyboard and go</h3>
+			<Event keyPressed={keysPressed[0]} event={event} />
+			<Log />
+		</div>
+	)
+}

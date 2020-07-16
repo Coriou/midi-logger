@@ -1,0 +1,22 @@
+{
+	"name": "midi-logger",
+	"version": "1.0.0",
+	"description": "Debug your MIDI keyboard in the browser",
+	"main": "index.js",
+	"scripts": {
+		"dev": "parcel index.html",
+		"build": "parcel build index.html --out-dir build --public-url https://coriou.github.io/midi-logger/"
+	},
+	"keywords": [],
+	"author": "Benjamin Coriou <benjamin@coriou.net>",
+	"license": "ISC",
+	"devDependencies": {
+		"parcel": "^1.12.4"
+	},
+	"dependencies": {
+		"react": "^16.13.1",
+		"react-dom": "^16.13.1",
+		"react-midi-hook": "^1.1.0",
+		"water.css": "github:kognise/water.css"
+	}
+}
