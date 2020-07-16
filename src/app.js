@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react"
+import React, { useEffect, useState } from "react"
 import useMidi from "react-midi-hook"
 
 const frenchNotes = {
@@ -12,6 +12,20 @@ const frenchNotes = {
 }
 
 export default () => {
+	// Looking at you Safari
+	if (!navigator.requestMIDIAccess)
+		return (
+			<div>
+				<p style={{ color: "#e74c3c" }}>
+					Your browser doesn't support the MIDIAccess API
+				</p>
+				<p>Try using Chrome, Edge or Opera</p>
+				<p>
+					<a href="https://caniuse.com/#feat=midi">Supported browsers</a>
+				</p>
+			</div>
+		)
+
 	const { pressedKeys, event } = useMidi()
 	const [keysPressed, setKeypressed] = useState([])
 
