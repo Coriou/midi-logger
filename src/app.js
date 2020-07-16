@@ -35,6 +35,7 @@ export default () => {
 	}, [pressedKeys])
 
 	const toFR = letter => frenchNotes[letter.replace(/#$/, "")]
+	const toMIDI = position => position + 21
 
 	const Event = ({ keyPressed, event }) => {
 		if (!keyPressed) return null
@@ -43,19 +44,30 @@ export default () => {
 
 		return (
 			<>
+				<h4>Values:</h4>
 				<ul>
 					<li>
-						<b>Value</b>: {keyPressed.position}
+						<b>MIDI</b>: {toMIDI(keyPressed.position)}
 					</li>
 					<li>
-						<b>Note</b>: {keyPressed.letter} {fr && <>({fr.toUpperCase()})</>}
+						<b>Velocity</b>: {keyPressed.velocity} (
+						{parseFloat((keyPressed.velocity / 127) * 100).toFixed(0)}%)
+					</li>
+					<li>
+						<b>Note</b>: {keyPressed.letter}
+					</li>
+					<li>
+						{fr && (
+							<>
+								<b>Note (fr)</b>: {fr}
+							</>
+						)}
 					</li>
 					<li>
 						<b>Octave</b>: {keyPressed.octave}
 					</li>
 					<li>
-						<b>Velocity</b>: {keyPressed.velocity} (
-						{parseFloat((keyPressed.velocity / 127) * 100).toFixed(0)}%)
+						<b>Keyboard position</b>: {keyPressed.position}
 					</li>
 				</ul>
 				<hr />
@@ -74,7 +86,7 @@ export default () => {
 				<pre style={{ maxHeight: 250, overflowY: "scroll", overflowX: "none" }}>
 					{keysPressed
 						.slice(1)
-						.map(k => `${k.position} (${k.letter} - ${toFR(k.letter)})`)
+						.map(k => `${toMIDI(k.position)} (${k.letter} - ${toFR(k.letter)})`)
 						.join("\n")}
 				</pre>
 			</>
